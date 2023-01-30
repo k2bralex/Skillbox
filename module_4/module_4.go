@@ -3,7 +3,6 @@ package module_4
 import "fmt"
 
 func Ege() {
-
 	var firstExam int
 	var secondExam int
 	var thirdExam int

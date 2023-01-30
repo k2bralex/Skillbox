@@ -1,0 +1,8 @@
+1 2006-01-02 cell xBox
+2 2006-01-02 buy playstation
+3 2006-01-02 buy cd
+4 2006-01-02 buy car
+5 2006-01-02 cell TV set
+6 2006-01-02 cell compucter
+7 2006-01-02 change awl
+8 2006-01-02 change soap
