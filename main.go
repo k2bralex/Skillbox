@@ -8,20 +8,33 @@ import (
 		md8 "Skillbox/module_8"
 		md9 "Skillbox/module_9"
 		md10 "Skillbox/module_10"
-		md11 "Skillbox/module_11"*/
+		md11 "Skillbox/module_11"
+		md12 "Skillbox/module_12"	*/
 
-	md12 "Skillbox/module_12"
+	md13 "Skillbox/module_13"
 	"fmt"
 )
 
 func main() {
 
-	//Module 12
-	md12.AnnouncementWriter()
-	md12.PermissionMode("read_only")
-	fmt.Println(md12.ParenthesesGenerator(3))
+	//Module 13
+
+	md13.Calc(1, 2, md13.Add)
+	md13.Calc(4, 2, md13.Sub)
+	md13.Calc(1, 6, md13.Mult)
+	md13.Calc(6, 3, md13.Div)
+
+	a, b := 3, 4
+	fmt.Printf("%d, %d -> ", a, b)
+	md13.Swap(&a, &b)
+	fmt.Printf("%d, %d\n", a, b)
 
 	/*
+		//Module 12
+		md12.AnnouncementWriter()
+		md12.PermissionMode("read_only")
+		fmt.Println(md12.ParenthesesGenerator(3))
+
 		//Module 11
 		exp := "Go is an Open source programming Language that makes it Easy to build simple, " +
 			"reliable, and efficient Software"
