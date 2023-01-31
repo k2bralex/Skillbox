@@ -11,33 +11,44 @@ import (
 		md11 "skillbox/module_11"
 		md12 "skillbox/module_12"
 		md13 "skillbox/module_13"
-		md14 "skillbox/module_14"	*/
+		md14 "skillbox/module_14"
+		md15 "skillbox/module_15"	*/
 
 	"fmt"
-	md15 "skillbox/module_15"
+	md19 "skillbox/module_19"
 )
 
 func main() {
 
-	//Module 15
-	e, o := md15.EvenOddCount()
-	fmt.Printf("Evens: %d\nOdds: %d\n", e, o)
+	//Module 19
+	fmt.Printf("%v + %v -> %v\n",
+		[]int{2, 3, 1, 0},
+		[]int{9, 7, 6, 8, 5},
+		md19.ArrMerge([]int{2, 3, 1, 0}, []int{9, 7, 6, 8, 5}))
 
-	arr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-
-	fmt.Printf("%v -> %v\n", arr, md15.Reverse(arr))
-
-	fmt.Printf("%v -> ", arr)
-	md15.SelfReverse(arr)
-	fmt.Printf("%v\n", arr)
+	arr := []int{8, 9, 1, 0, -6, -88}
+	fmt.Printf("%v -> %v\n", arr, md19.BubbleSort(arr))
 
 	/*
+
+		//Module 15
+		e, o := md15.EvenOddCount()
+		fmt.Printf("Evens: %d\nOdds: %d\n", e, o)
+
+		arr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+		fmt.Printf("%v -> %v\n", arr, md15.Reverse(arr))
+
+		fmt.Printf("%v -> ", arr)
+		md15.SelfReverse(arr)
+		fmt.Printf("%v\n", arr)
+
 		//Module 14
 
 		fmt.Println(md14.IsEven(10))
 		fmt.Println(md14.ChangeCoords())
 		fmt.Println(md14.NumConvert(2))
-		fmt.Println(md14.GlobalVarCalc1(5))
+		fmt.Println(md14.GlobalVarCalc1(GlobalVarCalc2(GlobalVarCalc3(5))))
 
 		//Module 13
 

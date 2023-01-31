@@ -54,16 +54,20 @@ func add(num int) (res int) {
 Функции должны прибавлять к поданному на вход числу глобальную переменную и возвращать результат.
 Затем вызовите по очереди три функции, передавая результат из одной в другую.*/
 
-var NUM = 10
+var (
+	NUM1 = 10
+	NUM2 = 20
+	NUM3 = 30
+)
 
 func GlobalVarCalc1(num int) int {
-	return GlobalVarCalc2(num) + NUM
+	return num + NUM1
 }
 
 func GlobalVarCalc2(num int) int {
-	return GlobalVarCalc3(num) + NUM
+	return num + NUM2
 }
 
 func GlobalVarCalc3(num int) int {
-	return num + NUM
+	return num + NUM3
 }
