@@ -1,1 +1,1 @@
-module Skillbox
+module skillbox

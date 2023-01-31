@@ -1,31 +1,41 @@
 package main
 
 import (
-	/*	md4 "Skillbox/module_4"
-		md5 "Skillbox/module_5"
-		md6 "Skillbox/module_6"
-		md7 "Skillbox/module_7"
-		md8 "Skillbox/module_8"
-		md9 "Skillbox/module_9"
-		md10 "Skillbox/module_10"
-		md11 "Skillbox/module_11"
-		md12 "Skillbox/module_12"
-		md13 "Skillbox/module_13"	*/
+	/*	md4 "skillbox/module_4"
+		md5 "skillbox/module_5"
+		md6 "skillbox/module_6"
+		md7 "skillbox/module_7"
+		md8 "skillbox/module_8"
+		md9 "skillbox/module_9"
+		md10 "skillbox/module_10"
+		md11 "skillbox/module_11"
+		md12 "skillbox/module_12"
+		md13 "skillbox/module_13"
+		md14 "skillbox/module_14"	*/
 
-	md14 "Skillbox/module_14"
 	"fmt"
+	md15 "skillbox/module_15"
 )
 
 func main() {
 
-	//Module 14
+	//Module 15
+	e, o := md15.EvenOddCount()
+	fmt.Printf("Evens: %d\nOdds: %d\n", e, o)
 
-	fmt.Println(md14.IsEven(10))
-	fmt.Println(md14.ChangeCoords())
-	fmt.Println(md14.NumConvert(2))
-	fmt.Println(md14.GlobalVarCalc1(5))
+	arr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	fmt.Printf("%v -> ", arr)
+	md15.Reverse(arr)
+	fmt.Printf("%v\n", arr)
 
 	/*
+		//Module 14
+
+		fmt.Println(md14.IsEven(10))
+		fmt.Println(md14.ChangeCoords())
+		fmt.Println(md14.NumConvert(2))
+		fmt.Println(md14.GlobalVarCalc1(5))
+
 		//Module 13
 
 		md13.Calc(1, 2, md13.Add)
