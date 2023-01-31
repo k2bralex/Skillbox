@@ -9,27 +9,35 @@ import (
 		md9 "Skillbox/module_9"
 		md10 "Skillbox/module_10"
 		md11 "Skillbox/module_11"
-		md12 "Skillbox/module_12"	*/
+		md12 "Skillbox/module_12"
+		md13 "Skillbox/module_13"	*/
 
-	md13 "Skillbox/module_13"
+	md14 "Skillbox/module_14"
 	"fmt"
 )
 
 func main() {
 
-	//Module 13
+	//Module 14
 
-	md13.Calc(1, 2, md13.Add)
-	md13.Calc(4, 2, md13.Sub)
-	md13.Calc(1, 6, md13.Mult)
-	md13.Calc(6, 3, md13.Div)
-
-	a, b := 3, 4
-	fmt.Printf("%d, %d -> ", a, b)
-	md13.Swap(&a, &b)
-	fmt.Printf("%d, %d\n", a, b)
+	fmt.Println(md14.IsEven(10))
+	fmt.Println(md14.ChangeCoords())
+	fmt.Println(md14.NumConvert(2))
+	fmt.Println(md14.GlobalVarCalc1(5))
 
 	/*
+		//Module 13
+
+		md13.Calc(1, 2, md13.Add)
+		md13.Calc(4, 2, md13.Sub)
+		md13.Calc(1, 6, md13.Mult)
+		md13.Calc(6, 3, md13.Div)
+
+		a, b := 3, 4
+		fmt.Printf("%d, %d -> ", a, b)
+		md13.Swap(&a, &b)
+		fmt.Printf("%d, %d\n", a, b)
+
 		//Module 12
 		md12.AnnouncementWriter()
 		md12.PermissionMode("read_only")
