@@ -24,8 +24,11 @@ func main() {
 	fmt.Printf("Evens: %d\nOdds: %d\n", e, o)
 
 	arr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	fmt.Printf("%v -> %v\n", arr, md15.Reverse(arr))
+
 	fmt.Printf("%v -> ", arr)
-	md15.Reverse(arr)
+	md15.SelfReverse(arr)
 	fmt.Printf("%v\n", arr)
 
 	/*

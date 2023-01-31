@@ -39,7 +39,16 @@ func InputGet() []int {
 Напишите функцию, принимающую на вход массив и возвращающую массив, в котором элементы идут в обратном порядке
 по сравнению с исходным. Напишите программу, демонстрирующую работу этого метода.*/
 
-func Reverse(arr []int) {
+func Reverse(arr []int) []int {
+	l := len(arr)
+	reversed := make([]int, l)
+	for i := 0; i < l/2; i++ {
+		reversed[i], reversed[l-1-i] = arr[l-1-i], arr[i]
+	}
+	return reversed
+}
+
+func SelfReverse(arr []int) {
 	l := len(arr)
 	var head, tail *int
 	for i := 0; i < l/2; i++ {
