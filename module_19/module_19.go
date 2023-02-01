@@ -1,15 +1,33 @@
 package module_19
 
-import "sort"
-
 /*Задание 1
 Напишите функцию, которая производит слияние двух отсортированных массивов длиной
 четыре и пять в один массив длиной девять.*/
 
 func ArrMerge(arr, brr []int) []int {
-	sort.Ints(arr)
-	sort.Ints(brr)
-	return append(arr, brr...)
+	i, j := 0, 0
+	arrLen := len(arr)
+	brrLen := len(brr)
+	var crr []int
+
+	for i < arrLen && j < brrLen {
+		if arr[i] < brr[j] {
+			crr = append(crr, arr[i])
+			i++
+		} else {
+			crr = append(crr, brr[j])
+			j++
+		}
+	}
+
+	for i < arrLen {
+		crr = append(crr, arr[i])
+	}
+	for j < brrLen {
+		crr = append(crr, brr[i])
+	}
+
+	return crr
 }
 
 /*Задание 2.
