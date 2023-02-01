@@ -12,24 +12,77 @@ import (
 		md12 "skillbox/module_12"
 		md13 "skillbox/module_13"
 		md14 "skillbox/module_14"
-		md15 "skillbox/module_15"	*/
+		md15 "skillbox/module_15"
+		md19 "skillbox/module_19"
+		md20 "skillbox/module_20"
+		md21 "skillbox/module_21"	*/
 
 	"fmt"
-	md19 "skillbox/module_19"
+	"reflect"
+	md20 "skillbox/module_20"
+	md21 "skillbox/module_21"
+	md22 "skillbox/module_22"
 )
 
 func main() {
 
-	//Module 19
-	fmt.Printf("%v + %v -> %v\n",
-		[]int{2, 3, 1, 0},
-		[]int{9, 7, 6, 8, 5},
-		md19.ArrMerge([]int{2, 3, 1, 0}, []int{9, 7, 6, 8, 5}))
+	//Module 22
 
-	arr := []int{8, 9, 1, 0, -6, -88}
-	fmt.Printf("%v -> %v\n", arr, md19.BubbleSort(arr))
+	a, b := md22.JumpSearch(1000, 10)
+	fmt.Println(a, b)
+
+	num := 3
+	fmt.Printf("Number %d. First in on index: %d\n", num,
+		md22.FindFirstIn(num, []int{1, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 6, 7, 7, 7, 8, 9, 10}))
+
+	//Module 21
+
+	var (
+		x int16   = -3555
+		y uint8   = 3
+		z float32 = 6.85
+	)
+	res := md21.Upcast(x, y, z)
+	fmt.Printf("Result: %.2f, value type: %s\n", res, reflect.TypeOf(res))
+
+	md21.UsingDefer(10, 25, md21.F1)
+	md21.UsingDefer(10, 25, md21.F2)
+	md21.UsingDefer(10, 25, md21.F3)
+
+	//Module 20
+
+	fmt.Println(md20.Determinant3x3([][]int{
+		{2, 4, 6},
+		{0, 9, 7},
+		{3, 1, 0},
+	}))
+
+	arr := [][]int{
+		{2, 4, 6, 9, 11},
+		{0, -4, 5, 3, 1},
+		{1, 7, 3, -24, 0},
+	}
+
+	brr := [][]int{
+		{4, 3, 11, 9},
+		{0, -4, 5, 3},
+		{2, 17, -3, -24},
+		{4, 7, 1, -24},
+		{5, -7, 0, 10},
+	}
+
+	fmt.Println(md20.MatrixMult(arr, brr))
 
 	/*
+
+		//Module 19
+		fmt.Printf("%v + %v -> %v\n",
+			[]int{2, 3, 1, 0},
+			[]int{9, 7, 6, 8, 5},
+			md19.ArrMerge([]int{2, 3, 1, 0}, []int{9, 7, 6, 8, 5}))
+
+		arr := []int{8, 9, 1, 0, -6, -88}
+		fmt.Printf("%v -> %v\n", arr, md19.BubbleSort(arr))
 
 		//Module 15
 		e, o := md15.EvenOddCount()
