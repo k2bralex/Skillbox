@@ -15,65 +15,82 @@ import (
 		md15 "skillbox/module_15"
 		md19 "skillbox/module_19"
 		md20 "skillbox/module_20"
-		md21 "skillbox/module_21"	*/
+		md21 "skillbox/module_21"
+		md20 "skillbox/module_20"
+		md21 "skillbox/module_21"
+		md22 "skillbox/module_22"	*/
 
 	"fmt"
-	"reflect"
-	md20 "skillbox/module_20"
-	md21 "skillbox/module_21"
-	md22 "skillbox/module_22"
+	md23 "skillbox/module_23"
 )
 
 func main() {
 
-	//Module 22
+	//Module 23
 
-	a, b := md22.JumpSearch(1000, 10)
-	fmt.Println(a, b)
+	arr := []int{13, 86, 60, 46, 73, 52, 73, 57, 49, 99, 133, 20, 1}
+	fmt.Println(md23.InsertSort(arr))
 
-	num := 3
-	fmt.Printf("Number %d. First in on index: %d\n", num,
-		md22.FindFirstIn(num, []int{1, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 6, 7, 7, 7, 8, 9, 10}))
-
-	//Module 21
-
-	var (
-		x int16   = -3555
-		y uint8   = 3
-		z float32 = 6.85
-	)
-	res := md21.Upcast(x, y, z)
-	fmt.Printf("Result: %.2f, value type: %s\n", res, reflect.TypeOf(res))
-
-	md21.UsingDefer(10, 25, md21.F1)
-	md21.UsingDefer(10, 25, md21.F2)
-	md21.UsingDefer(10, 25, md21.F3)
-
-	//Module 20
-
-	fmt.Println(md20.Determinant3x3([][]int{
-		{2, 4, 6},
-		{0, 9, 7},
-		{3, 1, 0},
-	}))
-
-	arr := [][]int{
-		{2, 4, 6, 9, 11},
-		{0, -4, 5, 3, 1},
-		{1, 7, 3, -24, 0},
+	sort := func(arr []int) []int {
+		for i := 0; i < len(arr)-1; i++ {
+			for j := 0; j < len(arr)-i-1; j++ {
+				if arr[j] < arr[j+1] {
+					arr[j], arr[j+1] = arr[j+1], arr[j]
+				}
+			}
+		}
+		return arr
 	}
-
-	brr := [][]int{
-		{4, 3, 11, 9},
-		{0, -4, 5, 3},
-		{2, 17, -3, -24},
-		{4, 7, 1, -24},
-		{5, -7, 0, 10},
-	}
-
-	fmt.Println(md20.MatrixMult(arr, brr))
+	fmt.Println(sort(arr))
+	//fmt.Println(md23.ReverseBubbleSort(arr))
 
 	/*
+		//Module 22
+
+		a, b := md22.JumpSearch(1000, 10)
+		fmt.Println(a, b)
+
+		num := 3
+		fmt.Printf("Number %d. First in on index: %d\n", num,
+			md22.FindFirstIn(num, []int{1, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 6, 7, 7, 7, 8, 9, 10}))
+
+		//Module 21
+
+		var (
+			x int16   = -3555
+			y uint8   = 3
+			z float32 = 6.85
+		)
+		res := md21.Upcast(x, y, z)
+		fmt.Printf("Result: %.2f, value type: %s\n", res, reflect.TypeOf(res))
+
+		md21.UsingDefer(10, 25, md21.F1)
+		md21.UsingDefer(10, 25, md21.F2)
+		md21.UsingDefer(10, 25, md21.F3)
+
+		//Module 20
+
+		fmt.Println(md20.Determinant3x3([][]int{
+			{2, 4, 6},
+			{0, 9, 7},
+			{3, 1, 0},
+		}))
+
+		arr := [][]int{
+			{2, 4, 6, 9, 11},
+			{0, -4, 5, 3, 1},
+			{1, 7, 3, -24, 0},
+		}
+
+		brr := [][]int{
+			{4, 3, 11, 9},
+			{0, -4, 5, 3},
+			{2, 17, -3, -24},
+			{4, 7, 1, -24},
+			{5, -7, 0, 10},
+		}
+
+		fmt.Println(md20.MatrixMult(arr, brr))
 
 		//Module 19
 		fmt.Printf("%v + %v -> %v\n",
