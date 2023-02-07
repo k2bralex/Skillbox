@@ -22,22 +22,25 @@ import (
 		md23 "skillbox/module_23"
 		md24 "skillbox/module_24"
 		md25 "skillbox/module_25"
-		md26 "skillbox/module_26"	*/
+		md26 "skillbox/module_26"
+		md27 "skillbox/module_27"	*/
 
 	//"log"
 	//"reflect"
 	//"os"
-	md27 "skillbox/module_27"
+	md28 "skillbox/module_28"
 )
 
 func main() {
 
-	//Module 27
+	//Module 28
 
-	md27.GroupCreate()
+	md28.GroupCreate()
 
 	/*
+		//Module 27
 
+		md27.GroupCreate()
 
 		//Module 26
 

@@ -26,6 +26,29 @@ func newStudent(name string, age, grade int) *Student {
 	return &Student{name: name, age: age, grade: grade}
 }
 
+type Group map[string]*Student
+
+func (g Group) printGroup() {
+	for k, v := range g {
+		fmt.Println(" <-", k, v.age, v.grade)
+	}
+}
+
+func (g Group) put(p *Student) int {
+	if _, ok := g[p.name]; ok {
+		return -1
+	}
+	g[p.name] = p
+	return 1
+}
+
+func (g Group) get(s string) (*Student, int) {
+	if val, ok := g[s]; !ok {
+		return val, 1
+	}
+	return nil, -1
+}
+
 // GroupCreate creates map of students
 //get user input while no "exit"
 //validate data
@@ -34,13 +57,13 @@ func newStudent(name string, age, grade int) *Student {
 //print results
 
 func GroupCreate() {
-	group := map[string]*Student{}
+	group := Group{}
 
 	for {
 		fmt.Print(" -> ")
 		input := userInput()
 		if input == "exit" {
-			printMap(&group)
+			group.printGroup()
 			return
 		}
 
@@ -58,13 +81,10 @@ func GroupCreate() {
 			continue
 		}
 
-		if _, ok := group[name]; ok {
+		if v := group.put(newStudent(name, int(age), int(grade))); v < 0 {
 			fmt.Println("Account exist")
 			continue
 		}
-
-		group[name] = newStudent(name, int(age), int(grade))
-
 	}
 }
 
@@ -76,10 +96,4 @@ func userInput() string {
 		log.Fatal(err)
 	}
 	return scanner.Text()
-}
-
-func printMap(m *map[string]*Student) {
-	for k, v := range *m {
-		fmt.Println(" <-", k, v.age, v.grade)
-	}
 }
