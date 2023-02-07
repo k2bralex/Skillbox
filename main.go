@@ -21,23 +21,27 @@ import (
 		md22 "skillbox/module_22"
 		md23 "skillbox/module_23"
 		md24 "skillbox/module_24"
-		md25 "skillbox/module_25"	*/
+		md25 "skillbox/module_25"
+		md26 "skillbox/module_26"	*/
 
 	//"log"
 	//"reflect"
 	//"os"
-	"os"
-	md26 "skillbox/module_26"
+	md27 "skillbox/module_27"
 )
 
 func main() {
 
-	//Module 26
+	//Module 27
 
-	md26.ConcatTextFile(os.Args[1:])
+	md27.GroupCreate()
 
 	/*
 
+
+		//Module 26
+
+		md26.ConcatTextFile(os.Args[1:])
 
 		//Module 25
 
