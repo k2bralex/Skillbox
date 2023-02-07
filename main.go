@@ -18,33 +18,64 @@ import (
 		md21 "skillbox/module_21"
 		md20 "skillbox/module_20"
 		md21 "skillbox/module_21"
-		md22 "skillbox/module_22"	*/
+		md22 "skillbox/module_22"
+		md23 "skillbox/module_23"
+		md24 "skillbox/module_24"
+		md25 "skillbox/module_25"	*/
 
-	"fmt"
-	md23 "skillbox/module_23"
+	//"log"
+	//"reflect"
+	//"os"
+	"os"
+	md26 "skillbox/module_26"
 )
 
 func main() {
 
-	//Module 23
+	//Module 26
 
-	arr := []int{13, 86, 60, 46, 73, 52, 73, 57, 49, 99, 133, 20, 1}
-	fmt.Println(md23.InsertSort(arr))
-
-	sort := func(arr []int) []int {
-		for i := 0; i < len(arr)-1; i++ {
-			for j := 0; j < len(arr)-i-1; j++ {
-				if arr[j] < arr[j+1] {
-					arr[j], arr[j+1] = arr[j+1], arr[j]
-				}
-			}
-		}
-		return arr
-	}
-	fmt.Println(sort(arr))
-	//fmt.Println(md23.ReverseBubbleSort(arr))
+	md26.ConcatTextFile(os.Args[1:])
 
 	/*
+
+
+		//Module 25
+
+		if len(os.Args[1:]) < 4 {
+			log.Fatal("Not enough arguments")
+		}
+		md25.General()
+
+		//Module 24
+
+		arr := []int{13, 86, 60, 46, 73, 52, 73, 57, 49, 99, 133, 20, 1}
+		brr, crr := md24.SplitArray(arr)
+		fmt.Printf("Even: %v\nOdd:  %v\n", brr, crr)
+
+		sentences := []string{"Hello world", "Hello Skillbox", "Привет Мир", "Привет Skillbox"}
+		chars := []rune{'H', 'E', 'L', 'П', 'М'}
+
+		fmt.Println(md24.ParseTest(sentences, chars))
+
+
+		//Module 23
+
+		arr := []int{13, 86, 60, 46, 73, 52, 73, 57, 49, 99, 133, 20, 1}
+		fmt.Println(md23.InsertSort(arr))
+
+		sort := func(arr []int) []int {
+			for i := 0; i < len(arr)-1; i++ {
+				for j := 0; j < len(arr)-i-1; j++ {
+					if arr[j] < arr[j+1] {
+						arr[j], arr[j+1] = arr[j+1], arr[j]
+					}
+				}
+			}
+			return arr
+		}
+		fmt.Println(sort(arr))
+		//fmt.Println(md23.ReverseBubbleSort(arr))
+
 		//Module 22
 
 		a, b := md22.JumpSearch(1000, 10)
