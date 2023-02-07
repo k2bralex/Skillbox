@@ -3,7 +3,6 @@ package module_28
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	stor "skillbox/module_28/storage"
 	stud "skillbox/module_28/student"
@@ -57,7 +56,8 @@ func userInput() string {
 	scanner.Scan()
 	err := scanner.Err()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		return ""
 	}
 	return scanner.Text()
 }

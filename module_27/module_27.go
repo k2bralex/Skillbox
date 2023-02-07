@@ -3,7 +3,6 @@ package module_27
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -93,7 +92,8 @@ func userInput() string {
 	scanner.Scan()
 	err := scanner.Err()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		return ""
 	}
 	return scanner.Text()
 }
