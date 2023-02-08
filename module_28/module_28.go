@@ -6,14 +6,40 @@ import (
 	"os"
 	stor "skillbox/module_28/storage"
 	stud "skillbox/module_28/student"
+	t "skillbox/module_28/teacher"
 	"strconv"
 	"strings"
 	"unicode"
 )
 
+func Run() {
+	teachers := [...]t.Teacher{
+		{"Teacher1", 30, 20000.99},
+		{"Teacher2", 31, 30000.99},
+		{"Teacher3", 32, 40000.99},
+		{"Teacher4", 33, 50000.99},
+	}
+
+	students := [...]stud.Student{
+		{"Student1", 18, 22},
+		{"Student2", 17, 21},
+		{"Student3", 19, 20},
+		{"Student4", 19, 19},
+	}
+
+	group := stor.Group{}
+	for _, v := range students {
+		group.Put(&v)
+	}
+	for _, v := range teachers {
+		group.Put(&v)
+	}
+
+	group.PrintGroup()
+}
+
 func GroupCreate() {
 	group := stor.Group{}
-
 	for {
 		fmt.Print(" -> ")
 		input := userInput()

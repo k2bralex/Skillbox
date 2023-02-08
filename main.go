@@ -35,7 +35,7 @@ func main() {
 
 	//Module 28
 
-	md28.GroupCreate()
+	md28.Run()
 
 	/*
 		//Module 27
