@@ -28,11 +28,18 @@ func Run() {
 	}
 
 	group := stor.Group{}
-	for _, v := range students {
-		group.Put(&v)
-	}
-	for _, v := range teachers {
-		group.Put(&v)
+	for i := 0; i < len(teachers)*2; i++ {
+		if i < 4 {
+			err := group.Put(&teachers[i])
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+		} else {
+			err := group.Put(&students[i-len(students)])
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+		}
 	}
 
 	group.PrintGroup()
