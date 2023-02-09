@@ -17,9 +17,7 @@ import (
 При вводе «стоп» выполнение программы останавливается.*/
 
 func Conveyor() {
-	ch0 := make(chan string)
-
-	ch1 := read(ch0)
+	ch1 := read()
 	ch2 := square(ch1)
 	ch3 := double(ch2)
 
@@ -29,42 +27,43 @@ func Conveyor() {
 
 }
 
-func read(ch chan string) chan string {
+func read() chan string {
+	out := make(chan string)
 	go func() {
 		var input string
 		for input != "exit" {
 			fmt.Scanln(&input)
-			ch <- input
+			out <- input
 		}
-		close(ch)
+		close(out)
 	}()
-	return ch
+	return out
 }
 
-func square(ch chan string) chan int64 {
-	ch1 := make(chan int64)
+func square(in chan string) chan int64 {
+	out := make(chan int64)
 	go func() {
-		for v := range ch {
+		for v := range in {
 			val, err := strconv.ParseInt(v, 10, 64)
 			if err != nil {
 				continue
 			}
-			ch1 <- val * val
+			out <- val * val
 		}
-		close(ch1)
+		close(out)
 	}()
-	return ch1
+	return out
 }
 
-func double(ch chan int64) chan int64 {
-	ch2 := make(chan int64)
+func double(in chan int64) chan int64 {
+	out := make(chan int64)
 	go func() {
-		for v := range ch {
-			ch2 <- v * 2
+		for v := range in {
+			out <- v * 2
 		}
-		close(ch2)
+		close(out)
 	}()
-	return ch2
+	return out
 }
 
 /*Задание 2

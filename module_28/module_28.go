@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	i "skillbox/module_28/instance"
 	stor "skillbox/module_28/storage"
 	stud "skillbox/module_28/student"
 	t "skillbox/module_28/teacher"
@@ -11,6 +12,34 @@ import (
 	"strings"
 	"unicode"
 )
+
+func RunWithGoroutines() {
+
+	userInputChan := reader()
+
+}
+
+func reader() *chan string {
+	out := make(chan string)
+	var input string
+	go func() {
+		for input != "exit" {
+			out <- userInput()
+		}
+		close(out)
+	}()
+	return &out
+}
+
+func creator(in *chan string) *chan i.Worker {
+	out := make(chan i.Worker)
+	go func() {
+		for v := range out {
+
+		}
+	}()
+	return &out
+}
 
 func Run() {
 	teachers := [...]t.Teacher{
