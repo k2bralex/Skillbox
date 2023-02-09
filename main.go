@@ -24,22 +24,22 @@ import (
 		md25 "skillbox/module_25"
 		md26 "skillbox/module_26"
 		md27 "skillbox/module_27"
-		md28 "skillbox/module_28"	*/
+		md28 "skillbox/module_28"
+		md29 "skillbox/module_29"	*/
 
-	//"log"
-	//"reflect"
-	//"os"
-	md29 "skillbox/module_29"
+	md28 "skillbox/module_28"
 )
 
 func main() {
 
-	//Module 29
-
-	md29.Conveyor()
-	md29.GracefulShutdown()
+	md28.RunWithGoroutines()
 
 	/*
+
+		//Module 29
+
+		//md29.Conveyor()
+		//md29.GracefulShutdown()
 
 		//Module 28
 

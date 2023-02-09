@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	i "skillbox/module_28/instance"
 	stor "skillbox/module_28/storage"
 	stud "skillbox/module_28/student"
 	t "skillbox/module_28/teacher"
@@ -13,34 +12,50 @@ import (
 	"unicode"
 )
 
+// RunWithGoroutines use goroutines to get internal input from user and create entities for storage
 func RunWithGoroutines() {
+	in := make(chan string)
+	g := stor.Group{}
 
-	userInputChan := reader()
+	go reader(in)
 
-}
-
-func reader() *chan string {
-	out := make(chan string)
-	var input string
-	go func() {
-		for input != "exit" {
-			out <- userInput()
+	for {
+		v, ok := <-in
+		if !ok {
+			g.PrintGroup()
+			break
 		}
-		close(out)
-	}()
-	return &out
-}
-
-func creator(in *chan string) *chan i.Worker {
-	out := make(chan i.Worker)
-	go func() {
-		for v := range out {
-
+		err := g.Put(creator(v))
+		if err != nil {
+			continue
 		}
-	}()
-	return &out
+	}
 }
 
+func reader(in chan string) {
+	go func() {
+		for {
+			input := userInput()
+			if input == "exit" {
+				break
+			}
+			in <- input
+		}
+		close(in)
+	}()
+}
+
+func creator(in string) *stud.Student {
+	n, a, g, e := validate(in)
+	if e != nil {
+		return nil
+	}
+	return &stud.Student{Name: n, Age: int(a), Grade: int(g)}
+}
+
+/*-------------------------------------------------------------------------------------------*/
+
+// Run use interface to get any entity into storage
 func Run() {
 	teachers := [...]t.Teacher{
 		{"Teacher1", 30, 20000.99},
@@ -74,6 +89,10 @@ func Run() {
 	group.PrintGroup()
 }
 
+/*-------------------------------------------------------------------------------------------*/
+
+// GroupCreate base module task create storage, get input from user, validate due to entity model,
+// put into storage, print storage after input
 func GroupCreate() {
 	group := stor.Group{}
 	for {
@@ -122,6 +141,27 @@ func userInput() string {
 		return ""
 	}
 	return scanner.Text()
+}
+
+func validate(input string) (string, int64, int64, error) {
+	details := strings.Fields(input)
+	if len(details) < 3 {
+		return "", 0, 0, fmt.Errorf("not enough arguments")
+	}
+
+	name, err0 := nameCheck(details[0])
+	if err0 != nil {
+		return "", 0, 0, err0
+	}
+	age, err1 := strconv.ParseInt(details[1], 10, 0)
+	if err1 != nil {
+		return "", 0, 0, err1
+	}
+	grade, err2 := strconv.ParseInt(details[2], 10, 0)
+	if err2 != nil {
+		return "", 0, 0, err2
+	}
+	return name, age, grade, nil
 }
 
 func nameCheck(str string) (string, error) {
