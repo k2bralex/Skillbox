@@ -27,12 +27,12 @@ import (
 		md28 "skillbox/module_28"
 		md29 "skillbox/module_29"	*/
 
-	md28 "skillbox/module_28"
+	md30 "skillbox/module_30"
 )
 
 func main() {
 
-	md28.RunWithGoroutines()
+	md30.Run()
 
 	/*
 
