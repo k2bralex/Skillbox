@@ -32,7 +32,8 @@ import (
 
 func main() {
 
-	md30.Run()
+	md30.Start()
+	//md30.Run()
 
 	/*
 

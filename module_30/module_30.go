@@ -29,13 +29,14 @@ var users = map[string]*User{
 func Run() {
 	r := mux.NewRouter()
 	r.HandleFunc("/users", getAll).Methods("GET")
+	r.HandleFunc("/users", createUser).Methods("POST")
+	r.HandleFunc("/users/{id}", ageUpdate).Methods("PATCH")
+	r.HandleFunc("/users/{id}", deleteUser).Methods("DELETE")
+
 	r.HandleFunc("/users/{id}/friends", getFriendList).Methods("GET")
 	r.HandleFunc("/users/{id}/friends", addFriend).Methods("PUT")
-	r.HandleFunc("/users", createUser).Methods("POST")
-	r.HandleFunc("/users/{id}", deleteUser).Methods("DELETE")
 	r.HandleFunc("/users/{source_id}/friends/{target_id}",
 		deleteFriend).Methods("DELETE")
-	r.HandleFunc("/users/{id}", ageUpdate).Methods("PATCH")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
