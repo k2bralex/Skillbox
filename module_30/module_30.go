@@ -6,14 +6,14 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	. "skillbox/module_30/models/person"
 	. "skillbox/module_30/models/target"
+	. "skillbox/module_30/models/user"
 	"strconv"
 )
 
 var Id = 1010
 
-var persons = map[string]*Person{
+var users = map[string]*User{
 	"1001": {"1001", "User1", 20, Friends{}},
 	"1002": {"1002", "User2", 21, Friends{}},
 	"1003": {"1003", "User3", 22, Friends{}},
@@ -28,94 +28,96 @@ var persons = map[string]*Person{
 
 func Run() {
 	r := mux.NewRouter()
-	r.HandleFunc("/persons", getAll).Methods("GET")
-	r.HandleFunc("/friends/{user_id}", getFriends).Methods("GET")
-	r.HandleFunc("/make_friends", makeFriends).Methods("POST")
-	r.HandleFunc("/create", createPerson).Methods("POST")
-	r.HandleFunc("/user", deletePerson).Methods("DELETE")
-	r.HandleFunc("/{user_id}", ageUpdate).Methods("PUT")
+	r.HandleFunc("/users", getAll).Methods("GET")
+	r.HandleFunc("/users/{id}/friends", getFriendList).Methods("GET")
+	r.HandleFunc("/users/{id}/friends", addFriend).Methods("PUT")
+	r.HandleFunc("/users", createUser).Methods("POST")
+	r.HandleFunc("/users/{id}", deleteUser).Methods("DELETE")
+	r.HandleFunc("/users/{source_id}/friends/{target_id}",
+		deleteFriend).Methods("DELETE")
+	r.HandleFunc("/users/{id}", ageUpdate).Methods("PATCH")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
+// getAll return all users in storage
 func getAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(persons)
+	json.NewEncoder(w).Encode(users)
 }
 
-/*
- 1. Сделайте обработчик создания пользователя. У пользователя должны быть следующие поля:
-    имя, возраст и массив друзей. Пользователя необходимо сохранять в мапу.
-*/
-func createPerson(w http.ResponseWriter, r *http.Request) {
+// createUser add new user into storage
+func createUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var person Person
-	_ = json.NewDecoder(r.Body).Decode(&person)
+	var user User
+	_ = json.NewDecoder(r.Body).Decode(&user)
 	Id++
-	person.ID = strconv.Itoa(Id)
-	persons[person.ID] = &person
-	json.NewEncoder(w).Encode(person)
+	user.ID = strconv.Itoa(Id)
+	users[user.ID] = &user
+	json.NewEncoder(w).Encode(user)
 
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(person.ID))
+	w.Write([]byte(user.ID))
 	return
 }
 
-/*
-2. Сделайте обработчик, который делает друзей из двух пользователей. Например, если мы создали
-двух пользователей и нам вернулись их ID, то в запросе мы можем указать ID пользователя,
-который инициировал запрос на дружбу, и ID пользователя, который примет инициатора в друзья.
-*/
-
-func makeFriends(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	var t Target
-	_ = json.NewDecoder(r.Body).Decode(&t)
-	source := persons[t.SourceId]
-	target := persons[t.TargetId]
-	source.Friends = append(source.Friends, target)
-
-	//json.NewEncoder(w).Encode(persons)
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("%s and %s friends now", source.Name, target.Name)))
-	return
-}
-
-/*
- 3. Сделайте обработчик, который удаляет пользователя. Данный обработчик принимает ID пользователя
-и удаляет его из хранилища, а также стирает его из массива friends у всех его друзей.
-*/
-
-func deletePerson(w http.ResponseWriter, r *http.Request) {
+// deleteUser from storage
+func deleteUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var (
 		name string
 		t    Target
 	)
 	_ = json.NewDecoder(r.Body).Decode(&t)
-	if val, ok := persons[t.TargetId]; ok {
+	if val, ok := users[t.ID]; ok {
 		name = val.Name
-		for _, person := range persons {
-			if index, isOk := person.FriendContains(val.ID); isOk {
-				person.FriendRemove(index)
+		for _, user := range users {
+			if index, isOk := user.FriendContains(val.ID); isOk {
+				user.DeleteFriend(index)
 			}
 		}
-		delete(persons, t.TargetId)
+		delete(users, t.ID)
 	}
-
-	//json.NewEncoder(w).Encode(persons)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(name))
 	return
 }
 
-/*4. Сделайте обработчик, который возвращает всех друзей пользователя.*/
-func getFriends(w http.ResponseWriter, r *http.Request) {
+// addFriend add new friend to friend list
+func addFriend(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var t Target
+	_ = json.NewDecoder(r.Body).Decode(&t)
+	params := mux.Vars(r)
+	source := users[params["id"]]
+	target := users[t.ID]
+	source.Friends = append(source.Friends, target)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("%s and %s friends now", source.Name, target.Name)))
+	return
+}
+
+// deleteFriend from friend list
+func deleteFriend(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	var friends = map[string]*Person{}
-	if val, ok := persons[params["user_id"]]; ok {
+	source := users[params["source_id"]]
+	source.DeleteFriend(source.GetFriendIndex(params["target_id"]))
+
+	//json.NewEncoder(w).Encode(users)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("user removed from friend list")))
+	return
+}
+
+// getFriendList return all users in friend list
+func getFriendList(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	var friends = map[string]*User{}
+	if val, ok := users[params["id"]]; ok {
 		for _, friend := range val.Friends {
 			friends[friend.ID] = friend
 		}
@@ -123,24 +125,19 @@ func getFriends(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(friends)
 }
 
-/*
-5. Сделайте обработчик, который обновляет возраст пользователя.
-*/
-
+// ageUpdate change user age
 func ageUpdate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var t Target
 	_ = json.NewDecoder(r.Body).Decode(&t)
-	newAge, _ := strconv.Atoi(t.NewAge)
 	params := mux.Vars(r)
-	if val, ok := persons[params["user_id"]]; ok {
-		val.AgeUpdate(newAge)
+	if val, ok := users[params["id"]]; ok {
+		val.AgeUpdate(t.Age)
 	}
 
-	//json.NewEncoder(w).Encode(persons)
+	//json.NewEncoder(w).Encode(users)
 
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(fmt.Sprintf("person age updated")))
+	w.Write([]byte(fmt.Sprintf("user age updated")))
 	return
-
 }
