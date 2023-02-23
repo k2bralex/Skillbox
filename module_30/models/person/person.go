@@ -21,12 +21,18 @@ func (p *Person) FriendContains(id string) (int, bool) {
 	return -1, false
 }
 
-func (p *Person) FriendRemove(i int) string {
-	name := p.Friends[i].Name
+func (p *Person) FriendRemove(i int) {
 	p.Friends, p.Friends[len(p.Friends)-1] = append(p.Friends[:i], p.Friends[i+1:]...), nil
-	return name
 }
 
 func (p *Person) AgeUpdate(age int) {
 	p.Age = age
+}
+
+func (p *Person) String() string {
+	return fmt.Sprintf(
+		"ID: %s\nName: %s\nAge: %d\n",
+		p.ID,
+		p.Name,
+		p.Age)
 }
