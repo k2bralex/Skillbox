@@ -1,10 +1,11 @@
 package user
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 	. "skillbox/module_30/hendlers"
-	"skillbox/module_30/pkg/logging"
 )
 
 var _ Handler = &handler{}
@@ -17,134 +18,141 @@ const (
 )
 
 type handler struct {
-	logger logging.Logger
+	service Service
 }
 
-func NewHandler(l logging.Logger) Handler {
-	return &handler{logger: l}
+func NewHandler(s Service) Handler {
+	return &handler{service: s}
 }
 
 func (h *handler) Register(r *mux.Router) {
-	r.HandleFunc(usersURL, GetList).Methods("GET")
-	r.HandleFunc(usersURL, CreateUser).Methods("POST")
-	r.HandleFunc(userURL, AgeUpdate).Methods("PATCH")
-	r.HandleFunc(userURL, DeleteUser).Methods("DELETE")
+	r.HandleFunc(usersURL, h.GetAll).Methods("GET")
+	r.HandleFunc(usersURL, h.CreateUser).Methods("POST")
+	r.HandleFunc(userURL, h.AgeUpdate).Methods("PATCH")
+	r.HandleFunc(userURL, h.DeleteUser).Methods("DELETE")
 
-	r.HandleFunc(friendsURL, GetFriendList).Methods("GET")
-	r.HandleFunc(friendsURL, AddFriend).Methods("PUT")
-	r.HandleFunc(friendURL, DeleteFriend).Methods("DELETE")
+	r.HandleFunc(friendsURL, h.GetFriendList).Methods("GET")
+	r.HandleFunc(friendsURL, h.AddFriend).Methods("PUT")
+	r.HandleFunc(friendURL, h.DeleteFriend).Methods("DELETE")
 }
 
-func GetList(w http.ResponseWriter, r *http.Request) {
-	/*w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)*/
+func (h *handler) GetAll(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(h.service.GetAll())
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("this is list of users"))
 }
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
-	/*w.Header().Set("Content-Type", "application/json")
+func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	user := NewUser()
+	_ = json.NewDecoder(r.Body).Decode(&user)
+	err := h.service.CreateUser(user)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	_ = json.NewEncoder(w).Encode(user)
+}
+
+func (h *handler) AgeUpdate(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	var user User
 	_ = json.NewDecoder(r.Body).Decode(&user)
-	Id++
-	user.ID = strconv.Itoa(Id)
-	users[user.ID] = &user
-	json.NewEncoder(w).Encode(user)
 
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(user.ID))
-	return*/
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("this is create users"))
-}
-
-func AgeUpdate(w http.ResponseWriter, r *http.Request) {
-	/*w.Header().Set("Content-Type", "application/json")
-	var t Target
-	_ = json.NewDecoder(r.Body).Decode(&t)
 	params := mux.Vars(r)
-	if val, ok := users[params["id"]]; ok {
-		val.AgeUpdate(t.Age)
+	val, err := h.service.GetById(params["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
 	}
 
-	//json.NewEncoder(w).Encode(users)
+	val.Age = user.Age
 
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(fmt.Sprintf("user age updated")))
-	return*/
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("this is update users"))
+	_ = json.NewEncoder(w).Encode(user)
+
 }
 
-func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	/*w.Header().Set("Content-Type", "application/json")
-	var (
-		name string
-		t    Target
-	)
-	_ = json.NewDecoder(r.Body).Decode(&t)
-	if val, ok := users[t.ID]; ok {
-		name = val.Name
-		for _, user := range users {
-			if index, isOk := user.FriendContains(val.ID); isOk {
-				user.DeleteFriend(index)
-			}
-		}
-		delete(users, t.ID)
-	}
+func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(name))
-	return*/
+	params := mux.Vars(r)
+
+	err := h.service.DeleteById(params["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
+	}
 
 	w.WriteHeader(http.StatusNoContent)
-	w.Write([]byte("this is delete users"))
 }
 
-func GetFriendList(w http.ResponseWriter, r *http.Request) {
-	/*w.Header().Set("Content-Type", "application/json")
+func (h *handler) GetFriendList(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	var friends = map[string]*User{}
-	if val, ok := users[params["id"]]; ok {
-		for _, friend := range val.Friends {
-			friends[friend.ID] = friend
-		}
+	user, err := h.service.GetById(params["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
 	}
-	json.NewEncoder(w).Encode(friends)*/
 
+	_ = json.NewEncoder(w).Encode(&user.Friends)
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("this is all friends"))
 }
 
-func AddFriend(w http.ResponseWriter, r *http.Request) {
-	/*w.Header().Set("Content-Type", "application/json")
-	var t Target
-	_ = json.NewDecoder(r.Body).Decode(&t)
+func (h *handler) AddFriend(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	source := users[params["id"]]
-	target := users[t.ID]
-	source.Friends = append(source.Friends, target)
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("%s and %s friends now", source.Name, target.Name)))
-	return*/
+	source, err := h.service.GetById(params["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
+	}
 
+	var user User
+	_ = json.NewDecoder(r.Body).Decode(&user)
+	target, err := h.service.GetById(user.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
+	}
+
+	if err = source.AddFriend(target); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
+	}
+
+	_ = json.NewEncoder(w).Encode(&source.Friends)
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("added friend to user"))
 }
 
-func DeleteFriend(w http.ResponseWriter, r *http.Request) {
-	/*w.Header().Set("Content-Type", "application/json")
+func (h *handler) DeleteFriend(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	source := users[params["source_id"]]
-	source.DeleteFriend(source.GetFriendIndex(params["target_id"]))
 
-	//json.NewEncoder(w).Encode(users)
+	source, err := h.service.GetById(params["source_id"])
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
+	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("user removed from friend list")))
-	return*/
+	target, err := h.service.GetById(params["target_id"])
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
+	}
+
+	err = source.DeleteFriend(target.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatal(err.Error())
+	}
 
 	w.WriteHeader(http.StatusNoContent)
-	w.Write([]byte("user friend deleted"))
+	w.Write([]byte(target.ID))
 }

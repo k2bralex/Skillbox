@@ -1,6 +1,11 @@
 package user
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
+
+var Id = 1010
 
 type User struct {
 	ID      string  `json:"id"`
@@ -11,24 +16,30 @@ type User struct {
 
 type Friends []*User
 
-func (u *User) FriendContains(id string) (int, bool) {
-	for i, fs := range u.Friends {
+func NewUser() *User {
+	Id++
+	return &User{ID: strconv.Itoa(Id)}
+}
+
+func (u *User) FriendContains(id string) error {
+	for _, fs := range u.Friends {
 		fmt.Println(fs.ID)
 		if fs.ID == id {
-			return i, true
+			return fmt.Errorf("already in a friend list")
 		}
 	}
-	return -1, false
+	return nil
 }
 
-func (u *User) DeleteFriend(i int) {
-	if i < 0 {
-		return
+func (u *User) AddFriend(t *User) error {
+	if err := u.FriendContains(t.ID); err != nil {
+		return err
 	}
-	u.Friends, u.Friends[len(u.Friends)-1] = append(u.Friends[:i], u.Friends[i+1:]...), nil
+	u.Friends = append(u.Friends, t)
+	return nil
 }
 
-func (u *User) GetFriendIndex(id string) int {
+func (u *User) getFriendIndex(id string) int {
 	for i, user := range u.Friends {
 		if user.ID == id {
 			return i
@@ -37,8 +48,13 @@ func (u *User) GetFriendIndex(id string) int {
 	return -1
 }
 
-func (u *User) AgeUpdate(age int) {
-	u.Age = age
+func (u *User) DeleteFriend(id string) error {
+	i := u.getFriendIndex(id)
+	if i < 0 {
+		return fmt.Errorf("not in friend list")
+	}
+	u.Friends, u.Friends[len(u.Friends)-1] = append(u.Friends[:i], u.Friends[i+1:]...), nil
+	return nil
 }
 
 func (u *User) String() string {
