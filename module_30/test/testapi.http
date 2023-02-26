@@ -48,7 +48,7 @@ Content-Type: application/
 PUT http://localhost:8080/users/1001/friends
 Content-Type: application/json
 
-{"id":"1002"}
+{"id": 1002}
 
 > {%
     client.test("Request executed successfully", function() {

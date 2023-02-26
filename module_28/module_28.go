@@ -12,7 +12,7 @@ import (
 	"unicode"
 )
 
-// RunWithGoroutines use goroutines to get internal input from user and create entities for storage
+// RunWithGoroutines use goroutines to get internal input from model and create entities for storage
 func RunWithGoroutines() {
 	in := make(chan string)
 	g := stor.Group{}
@@ -55,7 +55,7 @@ func creator(in string) *stud.Student {
 
 /*-------------------------------------------------------------------------------------------*/
 
-// Run use interface to get any entity into storage
+// Run use interface to get any service into storage
 func Run() {
 	teachers := [...]t.Teacher{
 		{"Teacher1", 30, 20000.99},
@@ -91,7 +91,7 @@ func Run() {
 
 /*-------------------------------------------------------------------------------------------*/
 
-// GroupCreate base module task create storage, get input from user, validate due to entity model,
+// GroupCreate base module task create storage, get input from model, validate due to service model,
 // put into storage, print storage after input
 func GroupCreate() {
 	group := stor.Group{}

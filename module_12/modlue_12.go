@@ -45,7 +45,7 @@ func AnnouncementWriter() {
 		fmt.Println("File is empty")
 	}
 
-	//ask for new string from user and append formatted string into file
+	//ask for new string from model and append formatted string into file
 	for {
 		fmt.Print("Write new announcement:")
 		input := customConsoleReader()

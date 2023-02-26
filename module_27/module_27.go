@@ -49,7 +49,7 @@ func (g Group) get(s string) (*Student, int) {
 }
 
 // GroupCreate creates map of students
-//get user input while no "exit"
+//get model input while no "exit"
 //validate data
 //create new instance
 //add to map

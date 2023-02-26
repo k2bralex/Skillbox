@@ -1,11 +1,15 @@
-package user
+package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
+	. "httpservice/hendlers"
+	"httpservice/internal/model"
+	"httpservice/internal/service"
 	"log"
 	"net/http"
-	. "skillbox/module_30/hendlers"
+	"strconv"
 )
 
 var _ Handler = &handler{}
@@ -18,10 +22,10 @@ const (
 )
 
 type handler struct {
-	service Service
+	service service.Service
 }
 
-func NewHandler(s Service) Handler {
+func NewHandler(s service.Service) Handler {
 	return &handler{service: s}
 }
 
@@ -45,7 +49,7 @@ func (h *handler) GetAll(w http.ResponseWriter, r *http.Request) {
 func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	user := NewUser()
+	user := model.NewUser()
 	_ = json.NewDecoder(r.Body).Decode(&user)
 	err := h.service.CreateUser(user)
 	if err != nil {
@@ -60,11 +64,18 @@ func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 func (h *handler) AgeUpdate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var user User
+	var user model.User
 	_ = json.NewDecoder(r.Body).Decode(&user)
-
 	params := mux.Vars(r)
-	val, err := h.service.GetById(params["id"])
+
+	id, err := strconv.Atoi(params["id"])
+	fmt.Println(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatal(err.Error())
+	}
+
+	val, err := h.service.GetById(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		log.Fatal(err.Error())
@@ -82,7 +93,13 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
-	err := h.service.DeleteById(params["id"])
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatal(err.Error())
+	}
+
+	err = h.service.DeleteById(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		log.Fatal(err.Error())
@@ -94,7 +111,14 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 func (h *handler) GetFriendList(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	user, err := h.service.GetById(params["id"])
+
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatal(err.Error())
+	}
+
+	user, err := h.service.GetById(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		log.Fatal(err.Error())
@@ -108,13 +132,19 @@ func (h *handler) AddFriend(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	source, err := h.service.GetById(params["id"])
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatal(err.Error())
+	}
+
+	source, err := h.service.GetById(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		log.Fatal(err.Error())
 	}
 
-	var user User
+	var user model.User
 	_ = json.NewDecoder(r.Body).Decode(&user)
 	target, err := h.service.GetById(user.ID)
 	if err != nil {
@@ -135,13 +165,25 @@ func (h *handler) DeleteFriend(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	source, err := h.service.GetById(params["source_id"])
+	sourceId, err := strconv.Atoi(params["source_id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatal(err.Error())
+	}
+
+	targetId, err := strconv.Atoi(params["target_id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatal(err.Error())
+	}
+
+	source, err := h.service.GetById(sourceId)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		log.Fatal(err.Error())
 	}
 
-	target, err := h.service.GetById(params["target_id"])
+	target, err := h.service.GetById(targetId)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		log.Fatal(err.Error())
@@ -154,5 +196,5 @@ func (h *handler) DeleteFriend(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
-	w.Write([]byte(target.ID))
+	w.Write([]byte(fmt.Sprintln(target.ID)))
 }

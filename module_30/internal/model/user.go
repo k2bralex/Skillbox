@@ -1,14 +1,11 @@
-package user
+package model
 
 import (
 	"fmt"
-	"strconv"
 )
 
-var Id = 1010
-
 type User struct {
-	ID      string  `json:"id"`
+	ID      int     `json:"id"`
 	Name    string  `json:"name"`
 	Age     int     `json:"age"`
 	Friends Friends `json:"friends"`
@@ -17,13 +14,11 @@ type User struct {
 type Friends []*User
 
 func NewUser() *User {
-	Id++
-	return &User{ID: strconv.Itoa(Id)}
+	return &User{}
 }
 
-func (u *User) FriendContains(id string) error {
+func (u *User) FriendContains(id int) error {
 	for _, fs := range u.Friends {
-		fmt.Println(fs.ID)
 		if fs.ID == id {
 			return fmt.Errorf("already in a friend list")
 		}
@@ -39,7 +34,7 @@ func (u *User) AddFriend(t *User) error {
 	return nil
 }
 
-func (u *User) getFriendIndex(id string) int {
+func (u *User) getFriendIndex(id int) int {
 	for i, user := range u.Friends {
 		if user.ID == id {
 			return i
@@ -48,7 +43,7 @@ func (u *User) getFriendIndex(id string) int {
 	return -1
 }
 
-func (u *User) DeleteFriend(id string) error {
+func (u *User) DeleteFriend(id int) error {
 	i := u.getFriendIndex(id)
 	if i < 0 {
 		return fmt.Errorf("not in friend list")
